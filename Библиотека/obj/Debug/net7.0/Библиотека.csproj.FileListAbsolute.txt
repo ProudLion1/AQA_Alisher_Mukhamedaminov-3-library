@@ -1,0 +1,14 @@
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\bin\Debug\net7.0\Библиотека.exe
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\bin\Debug\net7.0\Библиотека.deps.json
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\bin\Debug\net7.0\Библиотека.runtimeconfig.json
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\bin\Debug\net7.0\Библиотека.dll
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\bin\Debug\net7.0\Библиотека.pdb
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.AssemblyInfo.cs
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.dll
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\refint\Библиотека.dll
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.pdb
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\Библиотека.genruntimeconfig.cache
+C:\Users\user\Desktop\Практика Автоматизации\Библиотека\Библиотека\obj\Debug\net7.0\ref\Библиотека.dll

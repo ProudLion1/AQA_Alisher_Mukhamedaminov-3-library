@@ -1,0 +1,488 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+// Определение основного класса программы
+class Program
+{
+    static Library library = new Library(); // Экземпляр класса библиотеки
+    static List<Book> books = new List<Book>(); // Список книг в библиотеке
+    static List<BookLoan> bookLoans = new List<BookLoan>(); // Список выдач книг
+
+    // Основной метод программы
+    static void Main()
+    {
+        ShowMainMenu();
+    }
+
+    // Метод для отображения главного меню
+    static void ShowMainMenu()
+    {
+        while (true)
+        {
+            Console.WriteLine("1. Просмотр контактной информации о библиотеке");
+            Console.WriteLine("2. Управление книгами");
+            Console.WriteLine("3. Выдача и возврат книг");
+            Console.WriteLine("4. Статистика");
+            Console.WriteLine("5. Выход");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    ShowLibraryInfo();
+                    break;
+                case "2":
+                    ManageBooks();
+                    break;
+                case "3":
+                    ManageBookLoans();
+                    break;
+                case "4":
+                    ShowStatistics();
+                    break;
+                case "5":
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Некорректный выбор. Пожалуйста, выберите снова.");
+                    break;
+            }
+        }
+    }
+
+    // Метод для отображения информации о библиотеке
+    static void ShowLibraryInfo()
+    {
+        Console.WriteLine("Контактная информация о библиотеке:");
+        Console.WriteLine($"Название: {library.Name}");
+        Console.WriteLine($"Местоположение: {library.Location}");
+        Console.WriteLine($"Контактный номер телефона: {library.ContactNumber}");
+        Console.WriteLine($"График работы: {library.WorkingHours}");
+        Console.WriteLine($"Библиотекарь: {library.LibrarianName}");
+        Console.WriteLine();
+    }
+
+    // Метод для управления книгами
+    static void ManageBooks()
+    {
+        while (true)
+        {
+            Console.WriteLine("1. Просмотр каталога книг без сортировки");
+            Console.WriteLine("2. Просмотр каталога книг с сортировкой");
+            Console.WriteLine("3. Добавление новой книги в каталог");
+            Console.WriteLine("4. Редактирование информации о книге в каталоге");
+            Console.WriteLine("5. Удаление книги из каталога");
+            Console.WriteLine("6. Поиск книги по автору");
+            Console.WriteLine("7. Поиск книги по названию");
+            Console.WriteLine("8. Вернуться в главное меню");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    ShowBookCatalog();
+                    break;
+                case "2":
+                    ShowSortedBookCatalog();
+                    break;
+                case "3":
+                    AddBook();
+                    break;
+                case "4":
+                    EditBook();
+                    break;
+                case "5":
+                    RemoveBook();
+                    break;
+                case "6":
+                    SearchByAuthor();
+                    break;
+                case "7":
+                    SearchByTitle();
+                    break;
+                case "8":
+                    return;
+                default:
+                    Console.WriteLine("Некорректный выбор. Пожалуйста, выберите снова.");
+                    break;
+            }
+        }
+    }
+
+    // Метод для отображения каталога книг
+    static void ShowBookCatalog()
+    {
+        Console.WriteLine("Каталог книг в библиотеке:");
+        foreach (var book in books)
+        {
+            Console.WriteLine($"{book.Title} - {book.Author}");
+        }
+        Console.WriteLine();
+    }
+
+    // Метод для отображения отсортированного каталога книг
+    static void ShowSortedBookCatalog()
+    {
+        Console.WriteLine("1. Сортировка по автору");
+        Console.WriteLine("2. Сортировка по названию");
+        Console.WriteLine("3. Вернуться в предыдущее меню");
+
+        string choice = Console.ReadLine();
+
+        switch (choice)
+        {
+            case "1":
+                ShowSortedBooks("author");
+                break;
+            case "2":
+                ShowSortedBooks("title");
+                break;
+            case "3":
+                return;
+            default:
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите снова.");
+                break;
+        }
+    }
+
+    // Метод для отображения отсортированных книг
+    static void ShowSortedBooks(string sortBy)
+    {
+        List<Book> sortedBooks;
+        if (sortBy.ToLower() == "author")
+        {
+            sortedBooks = books.OrderBy(b => b.Author).ToList();
+        }
+        else
+        {
+            sortedBooks = books.OrderBy(b => b.Title).ToList();
+        }
+
+        Console.WriteLine($"Отсортированный каталог книг по {sortBy}:");
+
+        foreach (var book in sortedBooks)
+        {
+            Console.WriteLine($"{book.Title} - {book.Author}");
+        }
+
+        Console.WriteLine();
+    }
+
+    // Метод для добавления новой книги
+    static void AddBook()
+    {
+        Console.WriteLine("Введите название книги:");
+        string title = Console.ReadLine();
+
+        Console.WriteLine("Введите автора книги:");
+        string author = Console.ReadLine();
+
+        books.Add(new Book { Title = title, Author = author });
+        Console.WriteLine("Книга успешно добавлена в каталог библиотеки!\n");
+    }
+
+    // Метод для редактирования информации о книге
+    static void EditBook()
+    {
+        Console.WriteLine("Введите название книги, информацию о которой нужно отредактировать:");
+        string title = Console.ReadLine();
+
+        Book bookToEdit = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+
+        if (bookToEdit != null)
+        {
+            Console.WriteLine("Введите новое название книги:");
+            bookToEdit.Title = Console.ReadLine();
+
+            Console.WriteLine("Введите нового автора книги:");
+            bookToEdit.Author = Console.ReadLine();
+
+            Console.WriteLine("Информация о книге успешно отредактирована!\n");
+        }
+        else
+        {
+            Console.WriteLine("Книга не найдена в каталоге библиотеки.\n");
+        }
+    }
+
+    // Метод для удаления книги из каталога
+    static void RemoveBook()
+    {
+        Console.WriteLine("Введите название книги, которую нужно удалить из каталога:");
+        string title = Console.ReadLine();
+
+        Book bookToRemove = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+
+        if (bookToRemove != null)
+        {
+            books.Remove(bookToRemove);
+            Console.WriteLine("Книга успешно удалена из каталога библиотеки!\n");
+        }
+        else
+        {
+            Console.WriteLine("Книга не найдена в каталоге библиотеки.\n");
+        }
+    }
+
+    // Метод для поиска книги по автору
+    static void SearchByAuthor()
+    {
+        Console.WriteLine("Введите имя автора (2 и более последовательных символа):");
+        string authorQuery = Console.ReadLine();
+
+        var matchingBooks = books.Where(b => b.Author.IndexOf(authorQuery, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+        if (matchingBooks.Any())
+        {
+            Console.WriteLine("Найденные книги по автору:");
+            foreach (var book in matchingBooks)
+            {
+                Console.WriteLine($"{book.Title} - {book.Author}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Книги по автору не найдены.");
+        }
+
+        Console.WriteLine();
+    }
+
+    // Метод для поиска книги по названию
+    static void SearchByTitle()
+    {
+        Console.WriteLine("Введите название книги (2 и более последовательных символа):");
+        string titleQuery = Console.ReadLine();
+
+        var matchingBooks = books.Where(b => b.Title.IndexOf(titleQuery, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+        if (matchingBooks.Any())
+        {
+            Console.WriteLine("Найденные книги по названию:");
+            foreach (var book in matchingBooks)
+            {
+                Console.WriteLine($"{book.Title} - {book.Author}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Книги по названию не найдены.");
+        }
+
+        Console.WriteLine();
+    }
+
+    // Метод для управления выдачей и возвратом книг
+    static void ManageBookLoans()
+    {
+        while (true)
+        {
+            Console.WriteLine("1. Выдача книги клиенту");
+            Console.WriteLine("2. Возврат книги клиентом");
+            Console.WriteLine("3. Вернуться в предыдущее меню");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    IssueBook();
+                    break;
+                case "2":
+                    ReturnBook();
+                    break;
+                case "3":
+                    return;
+                default:
+                    Console.WriteLine("Некорректный выбор. Пожалуйста, выберите снова.");
+                    break;
+            }
+        }
+    }
+
+    // Метод для выдачи книги клиенту
+    static void IssueBook()
+    {
+        Console.WriteLine("Введите название книги, которую выдаете:");
+        string title = Console.ReadLine();
+
+        Book bookToIssue = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+
+        if (bookToIssue != null)
+        {
+            Console.WriteLine("Введите информацию о клиенте:");
+            Console.WriteLine("Имя:");
+            string clientFirstName = Console.ReadLine();
+            Console.WriteLine("Фамилия:");
+            string clientLastName = Console.ReadLine();
+            Console.WriteLine("Номер мобильного телефона:");
+            string clientPhoneNumber = Console.ReadLine();
+            Console.WriteLine("Дата выдачи (в формате ДД.ММ.ГГГГ):");
+            string issueDateStr = Console.ReadLine();
+
+            if (DateTime.TryParseExact(issueDateStr, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime issueDate))
+            {
+                if (bookLoans.Any(bl => bl.Book == bookToIssue && bl.ReturnDate == null))
+                {
+                    Console.WriteLine("Книга уже выдана и не может быть выдана повторно.");
+                }
+                else
+                {
+                    bookLoans.Add(new BookLoan
+                    {
+                        Book = bookToIssue,
+                        ClientFirstName = clientFirstName,
+                        ClientLastName = clientLastName,
+                        ClientPhoneNumber = clientPhoneNumber,
+                        IssueDate = issueDate
+                    });
+
+                    Console.WriteLine("Книга успешно выдана клиенту!\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Некорректный формат даты. Выдача книги отменена.\n");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Книга не найдена в каталоге библиотеки.\n");
+        }
+    }
+
+    // Метод для возврата книги клиентом
+    static void ReturnBook()
+    {
+        Console.WriteLine("Введите название книги, которую возвращает клиент:");
+        string title = Console.ReadLine();
+
+        Book bookToReturn = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+
+        if (bookToReturn != null)
+        {
+            var loan = bookLoans.FirstOrDefault(bl => bl.Book == bookToReturn && bl.ReturnDate == null);
+
+            if (loan != null)
+            {
+                Console.WriteLine("Введите дату возврата (в формате ДД.ММ.ГГГГ):");
+                string returnDateStr = Console.ReadLine();
+
+                if (DateTime.TryParseExact(returnDateStr, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime returnDate))
+                {
+                    loan.ReturnDate = returnDate;
+Console.WriteLine("Книга успешно возвращена в библиотеку!\n");
+                }
+                else
+{
+    Console.WriteLine("Некорректный формат даты. Возврат книги отменен.\n");
+}
+            }
+            else
+{
+    Console.WriteLine("Книга не выдана клиенту или уже возвращена.\n");
+}
+        }
+        else
+{
+    Console.WriteLine("Книга не найдена в каталоге библиотеки.\n");
+}
+    }
+
+    // Метод для отображения статистики
+    static void ShowStatistics()
+{
+    while (true)
+    {
+        Console.WriteLine("1. Список клиентов, не вернувших книги");
+        Console.WriteLine("2. Статистика по взятым и возвращенным книгам");
+        Console.WriteLine("3. Вернуться в предыдущее меню");
+
+        string choice = Console.ReadLine();
+
+        switch (choice)
+        {
+            case "1":
+                ShowOverdueLoans();
+                break;
+            case "2":
+                ShowBookLoanStatistics();
+                break;
+            case "3":
+                return;
+            default:
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите снова.");
+                break;
+        }
+    }
+}
+
+// Метод для отображения списка клиентов, не вернувших книги
+static void ShowOverdueLoans()
+{
+    var overdueLoans = bookLoans.Where(bl => bl.ReturnDate == null && DateTime.Now > bl.IssueDate).ToList();
+
+    if (overdueLoans.Any())
+    {
+        Console.WriteLine("Список клиентов, не вернувших книги:");
+        foreach (var loan in overdueLoans)
+        {
+            Console.WriteLine($"Дата взятия: {loan.IssueDate.ToShortDateString()}");
+            Console.WriteLine($"Книга: {loan.Book.Title} - {loan.Book.Author}");
+            Console.WriteLine($"Клиент: {loan.ClientFirstName} {loan.ClientLastName} ({loan.ClientPhoneNumber})");
+            Console.WriteLine();
+        }
+    }
+    else
+    {
+        Console.WriteLine("Все книги в наличии.");
+    }
+    Console.WriteLine();
+}
+
+// Метод для отображения статистики по взятым и возвращенным книгам
+static void ShowBookLoanStatistics()
+{
+    foreach (var loan in bookLoans)
+    {
+        Console.WriteLine($"Дата взятия: {loan.IssueDate.ToShortDateString()}");
+        Console.WriteLine($"Дата возврата: {loan.ReturnDate?.ToShortDateString() ?? "Книга еще не возвращена"}");
+        Console.WriteLine($"Книга: {loan.Book.Title} - {loan.Book.Author}");
+        Console.WriteLine($"Клиент: {loan.ClientFirstName} {loan.ClientLastName} ({loan.ClientPhoneNumber})");
+        Console.WriteLine();
+    }
+    Console.WriteLine();
+}
+}
+
+// Класс представляющий книгу
+class Book
+{
+    public string Title { get; set; } // Название книги
+    public string Author { get; set; } // Автор книги
+}
+
+// Класс представляющий библиотеку
+class Library
+{
+    public string Name { get; set; } // Название библиотеки
+    public string Location { get; set; } // Местоположение библиотеки
+    public string ContactNumber { get; set; } // Контактный номер библиотеки
+    public string WorkingHours { get; set; } // График работы библиотеки
+    public string LibrarianName { get; set; } // Имя библиотекаря
+}
+
+// Класс представляющий выдачу книги клиенту
+class BookLoan
+{
+    public Book Book { get; set; } // Книга, выданная клиенту
+    public string ClientFirstName { get; set; } // Имя клиента
+    public string ClientLastName { get; set; } // Фамилия клиента
+    public string ClientPhoneNumber { get; set; } // Номер телефона клиента
+    public DateTime IssueDate { get; set; } // Дата выдачи
+    public DateTime? ReturnDate { get; set; } // Дата возврата (null, если книга еще не возвращена)
+}
